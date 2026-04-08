@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Money Manager</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 1rem;
+        }
+
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 0.5rem 0;
+            cursor: pointer;
+            background: #f5f5f5;
+            border: 1px solid #ccc;
+            border-bottom: none;
+        }
+
+        .tab.active {
+            background: white;
+            font-weight: bold;
+            border-top: 2px solid #4CAF50;
+            border-left: 2px solid #4CAF50;
+            border-right: 2px solid #4CAF50;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .transactions {
+            margin-top: 2rem;
+        }
+
+        .transaction {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .transaction.expense {
+            color: red;
+        }
+
+        .transaction.income {
+            color: green;
+        }
+
+        .transaction button {
+            margin-left: 10px;
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 0.25rem 0.5rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .balance {
+            text-align: center;
+            margin: 1.5rem 0;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 1rem 0;
+            padding: 1rem;
+            border-radius: 8px;
+            background: lightgray;
+            color: #333;
+        }
+
+        .card button {
+            background-color: red;
+            margin-left: 1rem;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Money Manager</h1>
+        <div>Grand Total: BDT <span id="grandTotal">0.00</span></div>
+    </header>
+
+    <div class="container">
+        <div class="tabs">
+            <div class="tab active" data-tab="cashManagement">Cash Management</div>
+            <div class="tab" data-tab="cardManagement">Card Management</div>
+            <div class="tab" data-tab="lendManagement">Lend Management</div>
+        </div>
+
+        <div class="tab-content active" id="cashManagement">
+            <h2>Cash Management</h2>
+            <div class="form-group">
+                <label for="cashDescription">Description (optional)</label>
+                <input type="text" id="cashDescription" placeholder="Enter description">
+            </div>
+            <div class="form-group">
+                <label for="cashAmount">Amount (BDT)</label>
+                <input type="number" id="cashAmount" placeholder="Enter amount">
+            </div>
+            <div class="form-group">
+                <label for="cashDate">Date and Time</label>
+                <input type="datetime-local" id="cashDate">
+            </div>
+            <button id="addCashIncome" style="background-color: green;">Income</button>
+            <button id="addCashExpense" style="background-color: red;">Expense</button>
+
+            <div class="transactions" id="cashTransactions">
+                <h3>Transaction History</h3>
+            </div>
+            <div class="balance">Total Cash: BDT <span id="totalCash">0.00</span></div>
+        </div>
+
+        <div class="tab-content" id="cardManagement">
+            <h2>Card Management</h2>
+            <div class="form-group">
+                <label for="cardName">Card Name</label>
+                <input type="text" id="cardName" placeholder="Enter card name">
+            </div>
+            <div class="form-group">
+                <label for="cardType">Card Type</label>
+                <select id="cardType">
+                    <option value="credit">Credit</option>
+                    <option value="debit">Debit</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="cardAmount">Amount (BDT)</label>
+                <input type="number" id="cardAmount" placeholder="Enter amount">
+            </div>
+            <div class="form-group">
+                <label for="cardColor">Card Color</label>
+                <input type="color" id="cardColor">
+            </div>
+            <button id="addCard">Add Card</button>
+
+            <div class="transactions" id="cardTransactions">
+                <h3>Cards</h3>
+            </div>
+            <div class="balance">Total Card Amount: BDT <span id="totalCard">0.00</span></div>
+        </div>
+
+        <div class="tab-content" id="lendManagement">
+            <h2>Lend Management</h2>
+            <div class="form-group">
+                <label for="lendType">Type</label>
+                <select id="lendType">
+                    <option value="give">Give</option>
+                    <option value="take">Take</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="lendAmount">Amount (BDT)</label>
+                <input type="number" id="lendAmount" placeholder="Enter amount">
+            </div>
+            <div class="form-group">
+                <label for="lendPerson">Person/Organization</label>
+                <input type="text" id="lendPerson" placeholder="Enter person/organization">
+            </div>
+            <button id="addLendTransaction">Add</button>
+
+            <div class="transactions" id="lendTransactions">
+                <h3>Transaction History</h3>
+            </div>
+            <div class="balance">Total Lend Amount: BDT <span id="totalLend">0.00</span></div>
+        </div>
+    </div>
+
+    <script>
+        const updateGrandTotal = () => {
+            const totalCash = parseFloat(document.getElementById('totalCash').textContent) || 0;
+            const totalCard = parseFloat(document.getElementById('totalCard').textContent) || 0;
+            const totalLend = parseFloat(document.getElementById('totalLend').textContent) || 0;
+            document.getElementById('grandTotal').textContent = (totalCash + totalCard + totalLend).toFixed(2);
+        };
+
+        const saveToLocalStorage = (key, data) => {
+            localStorage.setItem(key, JSON.stringify(data));
+        };
+
+        const getFromLocalStorage = (key) => {
+            return JSON.parse(localStorage.getItem(key)) || [];
+        };
+
+        const updateTransactionsInLocalStorage = (type, transactions) => {
+            saveToLocalStorage(`${type}Transactions`, transactions);
+        };
+
+        // Tab functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+            });
+        });
+
+        // Cash Management
+        const cashTransactions = getFromLocalStorage('cashTransactions');
+
+        const renderCashTransactions = () => {
+            const container = document.getElementById('cashTransactions');
+            container.innerHTML = '<h3>Transaction History</h3>';
+            cashTransactions.forEach((transaction, index) => {
+                const div = document.createElement('div');
+                div.className = `transaction ${transaction.type}`;
+                div.innerHTML = `
+                    <span>${transaction.description}</span>
+                    <span>${transaction.type === 'income' ? '+' : '-'} BDT ${transaction.amount.toFixed(2)}</span>
+                    <span>${transaction.date}</span>
+                    <button onclick="deleteCashTransaction(${index})">Delete</button>
+                `;
+                container.appendChild(div);
+            });
+        };
+
+        const addCashTransaction = (type) => {
+            const description = document.getElementById('cashDescription').value;
+            const amount = parseFloat(document.getElementById('cashAmount').value);
+            const date = document.getElementById('cashDate').value || new Date().toLocaleString('en-BD');
+
+            if (isNaN(amount) || amount <= 0) {
+                alert('Please enter a valid amount.');
+                return;
+            }
+
+            const transaction = { type, description, amount, date };
+            cashTransactions.push(transaction);
+            updateTransactionsInLocalStorage('cash', cashTransactions);
+
+            const totalCash = cashTransactions.reduce((sum, t) => t.type === 'income' ? sum + t.amount : sum - t.amount, 0);
+            document.getElementById('totalCash').textContent = totalCash.toFixed(2);
+
+            renderCashTransactions();
+            updateGrandTotal();
+        };
+
+        const deleteCashTransaction = (index) => {
+            cashTransactions.splice(index, 1);
+            updateTransactionsInLocalStorage('cash', cashTransactions);
+
+            const totalCash = cashTransactions.reduce((sum, t) => t.type === 'income' ? sum + t.amount : sum - t.amount, 0);
+            document.getElementById('totalCash').textContent = totalCash.toFixed(2);
+
+            renderCashTransactions();
+            updateGrandTotal();
+        };
+
+
+        document.getElementById('addCashIncome').addEventListener('click', () => addCashTransaction('income'));
+        document.getElementById('addCashExpense').addEventListener('click', () => addCashTransaction('expense'));
+
+        renderCashTransactions();
+
+        // Card Management
+        const cardTransactions = getFromLocalStorage('cardTransactions');
+
+        const renderCardTransactions = () => {
+            const container = document.getElementById('cardTransactions');
+            container.innerHTML = '<h3>Cards</h3>';
+            cardTransactions.forEach((card, index) => {
+                const div = document.createElement('div');
+                div.className = 'card';
+                div.style.backgroundColor = card.color;
+                div.innerHTML = `
+                    <span>${card.name} (${card.type})</span>
+                    <input type="number" value="${card.amount.toFixed(2)}" class="cardAmountInput" onchange="updateCardAmount(${index}, this.value)">
+                    <button onclick="deleteCard(${index})">Delete</button>
+                `;
+                container.appendChild(div);
+            });
+        };
+
+        const addCardTransaction = () => {
+            const name = document.getElementById('cardName').value;
+            const type = document.getElementById('cardType').value;
+            const amount = parseFloat(document.getElementById('cardAmount').value);
+            const color = document.getElementById('cardColor').value;
+
+            if (!name || isNaN(amount) || amount <= 0) {
+                alert('Please provide valid card details.');
+                return;
+            }
+
+            const card = { name, type, amount, color };
+            cardTransactions.push(card);
+            updateTransactionsInLocalStorage('card', cardTransactions);
+
+            const totalCard = cardTransactions.reduce((sum, c) => sum + c.amount, 0);
+            document.getElementById('totalCard').textContent = totalCard.toFixed(2);
+
+            renderCardTransactions();
+            updateGrandTotal();
+        };
+
+        const updateCardAmount = (index, value) => {
+            const amount = parseFloat(value);
+            if (!isNaN(amount)) {
+                cardTransactions[index].amount = amount;
+                updateTransactionsInLocalStorage('card', cardTransactions);
+
+                const totalCard = cardTransactions.reduce((sum, c) => sum + c.amount, 0);
+                document.getElementById('totalCard').textContent = totalCard.toFixed(2);
+
+                updateGrandTotal();
+            }
+        };
+
+        const deleteCard = (index) => {
+            cardTransactions.splice(index, 1);
+            updateTransactionsInLocalStorage('card', cardTransactions);
+
+            const totalCard = cardTransactions.reduce((sum, c) => sum + c.amount, 0);
+            document.getElementById('totalCard').textContent = totalCard.toFixed(2);
+
+            renderCardTransactions();
+            updateGrandTotal();
+        };
+
+        document.getElementById('addCard').addEventListener('click', addCardTransaction);
+
+        renderCardTransactions();
+
+        // Lend Management
+        const lendTransactions = getFromLocalStorage('lendTransactions');
+
+        const renderLendTransactions = () => {
+            const container = document.getElementById('lendTransactions');
+            container.innerHTML = '<h3>Transaction History</h3>';
+            lendTransactions.forEach((transaction, index) => {
+                const div = document.createElement('div');
+                div.className = `transaction ${transaction.type}`;
+                div.innerHTML = `
+                    <span>${transaction.person}</span>
+                    <span>${transaction.type === 'give' ? '+' : '-'} BDT ${transaction.amount.toFixed(2)}</span>
+                    <button onclick="deleteLendTransaction(${index})">Delete</button>
+                `;
+                container.appendChild(div);
+            });
+        };
+
+        const addLendTransaction = () => {
+            const type = document.getElementById('lendType').value;
+            const amount = parseFloat(document.getElementById('lendAmount').value);
+            const person = document.getElementById('lendPerson').value;
+
+            if (!person || isNaN(amount) || amount <= 0) {
+                alert('Please provide valid lend details.');
+                return;
+            }
+
+            const transaction = { type, person, amount };
+            lendTransactions.push(transaction);
+            updateTransactionsInLocalStorage('lend', lendTransactions);
+
+            const totalLend = lendTransactions.reduce((sum, t) => t.type === 'give' ? sum + t.amount : sum - t.amount, 0);
+            document.getElementById('totalLend').textContent = totalLend.toFixed(2);
+
+            renderLendTransactions();
+            updateGrandTotal();
+        };
+
+        const deleteLendTransaction = (index) => {
+            lendTransactions.splice(index, 1);
+            updateTransactionsInLocalStorage('lend', lendTransactions);
+
+            const totalLend = lendTransactions.reduce((sum, t) => t.type === 'give' ? sum + t.amount : sum - t.amount, 0);
+            document.getElementById('totalLend').textContent = totalLend.toFixed(2);
+
+          renderLendTransactions();
+            updateGrandTotal();
+};
+
+        document.getElementById('addLendTransaction').addEventListener('click', addLendTransaction);
+
+        renderLendTransactions();
+    </script>
+</body>
+</html>
